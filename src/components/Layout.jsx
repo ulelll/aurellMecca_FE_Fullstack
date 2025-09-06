@@ -8,6 +8,7 @@ export default function Layout() {
     { to: "/users", label: "Users" },
     { to: "/products", label: "Products" },
     { to: "/sales", label: "Sales" },
+    { to: "/transactions", label: "Transactions" },
   ];
 
   return (
@@ -15,7 +16,7 @@ export default function Layout() {
       {/* Sidebar */}
       <aside className="w-64 bg-white shadow-md flex flex-col">
         <div className="h-16 flex items-center justify-center font-bold text-xl shadow-sm text-blue-600">
-          MyApp
+
         </div>
         <nav className="flex-1 p-4 space-y-1">
           {navItems.map((item) => (
@@ -38,7 +39,7 @@ export default function Layout() {
       <div className="flex-1 flex flex-col">
         {/* Navbar */}
         <header className="h-16 bg-white border-b shadow-sm flex items-center justify-between px-6">
-          <h1 className="text-lg font-semibold text-gray-800">
+          <h1 className="text-base font-semibold text-gray-800 px-2 py-0.5 w-20 h-8-fit">
             {navItems.find((i) => i.to === location.pathname)?.label || "Page"}
           </h1>
           <button className="bg-red-500 hover:bg-red-600 text-white px-4 py-1.5 rounded-lg text-sm font-medium shadow">

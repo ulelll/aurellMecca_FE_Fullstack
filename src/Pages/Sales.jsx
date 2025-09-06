@@ -1,11 +1,18 @@
-import { useState } from "react";
+
+import { useState, useEffect } from "react";
+import { useProductsStore } from '../api/products';
 
 export default function Sales() {
-  const [items, setItems] = useState([
-    // dummy 
-    { id: 1, name: "Laptop A", qty: 1, price: 7500000 },
-    { id: 2, name: "Mouse B", qty: 2, price: 200000 },
-  ]);
+
+  const { products, fetchProducts, loading: loadingProducts, error: errorProducts } = useProductsStore();
+  useEffect(() => { fetchProducts(); }, [fetchProducts]);
+  // Dummy qty & price for demo, real qty/price should come from transaction logic
+  const items = products.map(p => ({
+    id: p.id,
+    name: p.name || p.nama_produk,
+    qty: 1,
+    price: p.hpp || p.price || 0
+  }));
 
   const subtotal = items.reduce((acc, item) => acc + item.qty * item.price, 0);
   const discount = 0; // dummy, nanti bisa input
@@ -72,21 +79,25 @@ export default function Sales() {
             </tr>
           </thead>
           <tbody>
-            {items.map((item) => (
-              <tr key={item.id} className="border-t hover:bg-gray-50">
-                <td className="px-4 py-3">{item.name}</td>
-                <td className="px-4 py-3">{item.qty}</td>
-                <td className="px-4 py-3">
-                  Rp {item.price.toLocaleString("id-ID")}
-                </td>
-                <td className="px-4 py-3">
-                  Rp {(item.qty * item.price).toLocaleString("id-ID")}
-                </td>
-                <td className="px-4 py-3 flex justify-end">
-                  <button className="text-red-600 hover:underline">Delete</button>
-                </td>
-              </tr>
-            ))}
+            {loadingProducts ? (
+              <tr><td colSpan={5} className="text-center py-4">Loading products...</td></tr>
+            ) : errorProducts ? (
+              <tr><td colSpan={5} className="text-center py-4 text-red-500">{errorProducts}</td></tr>
+            ) : items.length > 0 ? (
+              items.map((item) => (
+                <tr key={item.id} className="border-t hover:bg-gray-50">
+                  <td className="px-4 py-3">{item.name}</td>
+                  <td className="px-4 py-3">{item.qty}</td>
+                  <td className="px-4 py-3">Rp {item.price.toLocaleString("id-ID")}</td>
+                  <td className="px-4 py-3">Rp {(item.qty * item.price).toLocaleString("id-ID")}</td>
+                  <td className="px-4 py-3 flex justify-end">
+                    <button className="text-red-600 hover:underline" disabled>Delete</button>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr><td colSpan={5} className="text-center py-4">No products found.</td></tr>
+            )}
           </tbody>
         </table>
       </div>
