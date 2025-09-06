@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'http://tes-amazink.test/api',
+  baseURL: 'https://test-amazink-aurel.rplrus.com/api',
   headers: {
     'Content-Type': 'application/json',
   },
